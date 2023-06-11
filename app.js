@@ -2,8 +2,8 @@ const express = require('express');
 const path = require('path');
 const cookieParser = require('cookie-parser');
 const logger = require('morgan');
-require('./configs/mongoose-config');
 const cors = require('cors');
+require('./configs/mongoose-config');
 require('dotenv').config();
 
 const postsRouter = require('./routes/posts');
@@ -19,15 +19,14 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 const originLinks = process.env.ORIGIN_LINKS? process.env.ORIGIN_LINKS.split(','):[]; 
-
 const corsOptions = {
   origin:originLinks,
   optionsSuccessStatus: 200,
 };
 app.options('*', cors(corsOptions));
 
-app.use('/posts', postsRouter);
-app.use('/comments', commentsRouter);
-app.use('/users', usersRouter);
+app.use('/posts', cors(corsOptions), postsRouter);
+app.use('/comments', cors(corsOptions), commentsRouter);
+app.use('/users', cors(corsOptions), usersRouter);
 
 module.exports = app;
