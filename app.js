@@ -7,7 +7,6 @@ require('./configs/mongoose-config');
 require('dotenv').config();
 
 const postsRouter = require('./routes/posts');
-const commentsRouter = require('./routes/comments');
 const usersRouter = require('./routes/users');
 
 const app = express();
@@ -26,7 +25,6 @@ const corsOptions = {
 app.options('*', cors(corsOptions));
 
 app.use('/posts', cors(corsOptions), postsRouter);
-app.use('/comments', cors(corsOptions), commentsRouter);
 app.use('/users', cors(corsOptions), usersRouter);
 
 module.exports = app;
