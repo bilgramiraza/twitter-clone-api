@@ -3,8 +3,9 @@ const path = require('path');
 const cookieParser = require('cookie-parser');
 const logger = require('morgan');
 const cors = require('cors');
-require('./configs/mongoose-config');
 require('dotenv').config();
+require('./configs/mongoose-config');
+require('./configs/passport-config');
 
 const postsRouter = require('./routes/posts');
 const usersRouter = require('./routes/users');
