@@ -1,9 +1,25 @@
-var express = require('express');
-var router = express.Router();
+const express = require('express');
+const router = express.Router();
 
-/* GET users listing. */
-router.get('/', function(req, res, next) {
-  res.send('respond with a resource');
-});
+const userController = require('../controllers/userController');
+
+/*user API Routes*/
+router.post('/', userController.login);
+router.post('/register', userController.register);
+router.post('/logout', userController.logout);
+
+router.get('/me', userController.currentUser);
+router.patch('/me', userController.modifyUser);
+router.delete('/me', userController.deleteUser);
+
+router.get('/:username', userController.getUser);
+
+router.get('/friends', userController.getFriends);
+router.delete('/friends/:userId', userController.removeFriend);
+
+router.get('/friend-request', userController.getFriendRequests);
+router.post('/friend-request/:userId', userController.sendFriendRequest);
+router.patch('/friend-request/:userId', userController.acceptFriendRequest);
+router.delete('/friend-request/:userId', userController.declineFriendRequest);
 
 module.exports = router;
