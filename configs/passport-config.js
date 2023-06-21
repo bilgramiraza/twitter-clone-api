@@ -7,16 +7,13 @@ const User = require('../models/user');
 const opts = {
   jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
   secretOrKey: process.env.JWT_SECRET,
+  issuer:'twitter-clone',
 };
 
-const verifyCallback = async (username, password, done)=>{
+const verifyCallback = async (jwtPayload, done)=>{
   try{
-    const foundUser = await User.findOne({username});
-    if(!foundUser) return done(null, false, {field:'username' ,msg:'User not found'});
-
-    //Compare Hashed Passwords 
-    const passwordCompare = await foundUser.comparePassword(password);
-    if(!passwordCompare)  return done(null, false, {field:'password', msg:'Invalid Password'});
+    const foundUser = await User.findById(jwtPayload.sub);
+    if(!foundUser) return done(null, false);
 
     return done(null, foundUser);
   }catch(err){
