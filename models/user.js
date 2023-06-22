@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
 const Schema = mongoose.Schema;
 
 const userSchema = new Schema({
@@ -41,5 +42,14 @@ userSchema.pre('findOneAndUpdate', async function(next){
 userSchema.methods.comparePassword = async function(inputPassword){
   return bcrypt.compare(inputPassword,this.password);
 }
+
+userSchema.methods.genAuthToken = function(){
+  const opts = {
+    expiresIn: "1d",
+    issuer:'twitter-clone',
+  };
+  const token = jwt.sign({sub: this._id},process.env.JWT_SECRET,opts);
+  return token;
+};
 
 module.exports = mongoose.model('user', userSchema);
