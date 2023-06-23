@@ -52,14 +52,19 @@ userSchema.methods.comparePassword = async function(inputPassword){
   return await bcrypt.compare(inputPassword,this.password);
 }
 
-userSchema.methods.genAuthToken = function(){
+userSchema.methods.genAuthToken = async function(){
   const opts = {
     expiresIn: "1d",
     issuer:'twitter-clone',
   };
   const token = jwt.sign({sub: this._id},process.env.JWT_SECRET,opts);
   this.tokens = this.tokens.concat({token});
-  return token;
+  try{
+    await this.save();
+    return token;
+  }catch(err){
+    throw err;
+  }
 };
 
 module.exports = mongoose.model('user', userSchema);
