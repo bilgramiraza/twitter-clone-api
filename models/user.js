@@ -9,6 +9,15 @@ const userSchema = new Schema({
   password: { type:String, required:true },
   friends: [{ type:Schema.Types.ObjectId, ref:'user' }],
   friendReqs:[{ type:Schema.Types.ObjectId, ref:'user' }],
+  tokens:{
+    type:[{type:String}],
+    validate:{
+      validator: function (tokens){
+        return tokens.length<=10;
+      },
+      message:'Too Many Active Instances',
+    },
+  },
   timestamps: true,
 });
 
@@ -40,7 +49,7 @@ userSchema.pre('findOneAndUpdate', async function(next){
 });
 
 userSchema.methods.comparePassword = async function(inputPassword){
-  return bcrypt.compare(inputPassword,this.password);
+  return await bcrypt.compare(inputPassword,this.password);
 }
 
 userSchema.methods.genAuthToken = function(){
@@ -49,6 +58,7 @@ userSchema.methods.genAuthToken = function(){
     issuer:'twitter-clone',
   };
   const token = jwt.sign({sub: this._id},process.env.JWT_SECRET,opts);
+  this.tokens = this.tokens.concat({token});
   return token;
 };
 

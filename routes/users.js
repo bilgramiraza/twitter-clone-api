@@ -2,9 +2,10 @@ const express = require('express');
 const router = express.Router();
 
 const userController = require('../controllers/userController');
+const { loginValidation } = require('../middlewares/validation');
 
 /*user API Routes*/
-router.post('/', userController.login);
+router.post('/', loginValidation, userController.login);
 router.post('/register', userController.register);
 router.post('/logout', userController.logout);
 
