@@ -7,8 +7,14 @@ const userSchema = new Schema({
   username: { type:String, required:true },
   email: { type:String, required:true },
   password: { type:String, required:true },
-  friends: [{ type:Schema.Types.ObjectId, ref:'user' }],
-  friendReqs:[{ type:Schema.Types.ObjectId, ref:'user' }],
+  friends:{ 
+    type:[{ type:Schema.Types.ObjectId, ref:'user' }],
+    default:[],
+  },
+  friendReqs:{
+    type:[{ type:Schema.Types.ObjectId, ref:'user' }],
+    default:[],
+  },
   tokens:{
     type:[{type:String}],
     validate:{
@@ -17,6 +23,7 @@ const userSchema = new Schema({
       },
       message:'Too Many Active Instances',
     },
+    default:[],
   },
   timestamps: true,
 });
