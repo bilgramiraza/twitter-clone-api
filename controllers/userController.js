@@ -74,8 +74,15 @@ const deleteUser = async (req, res) => {
   }
 };
 
-const getUser = (req, res, next) => {
-  res.send('NOT IMPLEMENTED: ');
+const getUser = async (req, res) => {
+  try{
+    const foundUser = await User.findOne({ username:req.params.username }).select('_id username').lean().exec();
+    if(!foundUser)  res.status(404).send({message:'User Not Found'});
+
+    return res.status(200).json({username:foundUser.username, id:foundUser._id});
+  }catch(err){
+    return res.status(500).send(err);
+  }
 };
 
 const getFriends = (req, res, next) => {
