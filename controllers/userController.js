@@ -37,7 +37,7 @@ const register = async (req, res) => {
 
 const currentUser = async (req, res) => {
   try{
-    const foundUser = await User.findById(req.user).select('username email friends friendReqs').lean().exec();
+    const foundUser = await User.findById(req.user.id).select('username email friends friendReqs').lean().exec();
     const user = {
       username:foundUser.username,
       email:foundUser.email,
@@ -56,7 +56,7 @@ const modifyUser = async (req, res) => {
 
   try{
     const user = new User(req.body);
-    await User.findByIdAndUpdate(req.user,user,{ new:true });
+    await User.findByIdAndUpdate(req.user.id,user,{ new:true });
     return res.status(201).send({message:'User Info Modification Successful'});
   }catch(err){
     return res.status(500).send(err);

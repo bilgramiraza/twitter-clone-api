@@ -54,7 +54,7 @@ userSchema.methods.genAuthToken = function(){
     expiresIn: "1d",
     issuer:'twitter-clone',
   };
-  const token = jwt.sign({sub: this._id},process.env.JWT_SECRET,opts);
+  const token = jwt.sign({sub:{ id:this._id, username:this.username}},process.env.JWT_SECRET,opts);
   return token;
 };
 
