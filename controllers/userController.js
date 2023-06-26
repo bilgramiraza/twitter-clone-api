@@ -35,9 +35,6 @@ const register = async (req, res) => {
   }
 };
 
-const logout = (req, res, next) => {
-  res.send('NOT IMPLEMENTED:');
-};
 const currentUser = (req, res, next) => {
   res.send('NOT IMPLEMENTED:');
 };
