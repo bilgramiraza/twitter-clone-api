@@ -1,3 +1,4 @@
+const passport = require('passport');
 const { body, validationResult } = require('express-validator');
 const User = require('../models/user');
 
@@ -24,6 +25,10 @@ const uniqueUsernameCheck = async (value)=>{
   return true;
 };
 
+const authMiddleware = [
+  passport.authenticate('jwt', { session:false })
+];
+
 const loginValidation = [
   body('username', 'Username Cannot be Blank').trim().isLength({min:1}).escape(),
   body('password', 'Password Cannot be Blank').trim().isLength({min:8}).escape(),
@@ -40,4 +45,5 @@ const registerValidation = [
 module.exports = {
   loginValidation,
   registerValidation,
+  authMiddleware,
 };
