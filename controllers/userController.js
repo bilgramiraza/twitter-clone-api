@@ -57,14 +57,21 @@ const modifyUser = async (req, res) => {
   try{
     const user = new User(req.body);
     await User.findByIdAndUpdate(req.user.id,user,{ new:true });
-    return res.status(201).send({message:'User Info Modification Successful'});
+    return res.status(201).json({message:'User Info Modification Successful'});
   }catch(err){
     return res.status(500).send(err);
   }
 };
 
-const deleteUser = (req, res, next) => {
-  res.send(`NOT IMPLEMENTED:`);
+const deleteUser = async (req, res) => {
+  try{
+    const deletedUser = await User.findByIdAndDelete(req.user.id);
+    if(!deletedUser)  res.status(404).send({message:'User Not Found'});  
+
+    return res.status(204).json({message:'User Deleted Successfully'});
+  }catch(err){
+    return res.status(500).send(err);
+  }
 };
 
 const getUser = (req, res, next) => {
