@@ -15,16 +15,6 @@ const userSchema = new Schema({
     type:[{ type:Schema.Types.ObjectId, ref:'user' }],
     default:[],
   },
-  tokens:{
-    type:[{type:String}],
-    validate:{
-      validator: function (tokens){
-        return tokens.length<=10;
-      },
-      message:'Too Many Active Instances',
-    },
-    default:[],
-  },
   timestamps: true,
 });
 
@@ -59,19 +49,13 @@ userSchema.methods.comparePassword = async function(inputPassword){
   return await bcrypt.compare(inputPassword,this.password);
 }
 
-userSchema.methods.genAuthToken = async function(){
+userSchema.methods.genAuthToken = function(){
   const opts = {
     expiresIn: "1d",
     issuer:'twitter-clone',
   };
   const token = jwt.sign({sub: this._id},process.env.JWT_SECRET,opts);
-  this.tokens = this.tokens.concat({token});
-  try{
-    await this.save();
-    return token;
-  }catch(err){
-    throw err;
-  }
+  return token;
 };
 
 module.exports = mongoose.model('user', userSchema);
