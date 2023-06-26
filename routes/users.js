@@ -19,12 +19,12 @@ router.delete('/me', authMiddleware, userController.deleteUser);
 
 router.get('/:username', authMiddleware, userController.getUser);
 
-router.get('/friends', authMiddleware, userController.getFriends);
-router.delete('/friends/:userId', authMiddleware,  userController.removeFriend);
+router.get('/me/friends', authMiddleware, userController.getFriends);
+router.delete('/me/friends/:userId', authMiddleware,  userController.removeFriend);
 
-router.get('/friend-request', authMiddleware,  userController.getFriendRequests);
-router.post('/friend-request/:userId', authMiddleware,  userController.sendFriendRequest);
-router.patch('/friend-request/:userId', authMiddleware,  userController.acceptFriendRequest);
-router.delete('/friend-request/:userId', authMiddleware,  userController.declineFriendRequest);
+router.get('/me/friend-request', authMiddleware,  userController.getFriendRequests);
+router.post('/me/friend-request/:userId', authMiddleware,  userController.sendFriendRequest);
+router.patch('/me/friend-request/:userId', authMiddleware,  userController.acceptFriendRequest);
+router.delete('/me/friend-request/:userId', authMiddleware,  userController.declineFriendRequest);
 
 module.exports = router;
