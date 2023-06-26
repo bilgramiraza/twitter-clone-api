@@ -14,7 +14,7 @@ const login = async (req, res) => {
     if(!comparePasswords)
       return res.status(401).send({message:"Invalid Password"});
 
-    const token = await User.genAuthToken();
+    const token = User.genAuthToken();
     return res.status(200).json({message:"User Logged In",token});
 
   }catch(err){
@@ -50,8 +50,17 @@ const currentUser = async (req, res) => {
   }
 };
 
-const modifyUser = (req, res, next) => {
-  res.send('NOT IMPLEMENTED:');
+const modifyUser = async (req, res) => {
+  if(req.errorObject)
+    return res.status(400).send({message:req.errorObject});
+
+  try{
+    const user = new User(req.body);
+    await User.findByIdAndUpdate(req.user,user,{ new:true });
+    return res.status(201).send({message:'User Info Modification Successful'});
+  }catch(err){
+    return res.status(500).send(err);
+  }
 };
 
 const deleteUser = (req, res, next) => {

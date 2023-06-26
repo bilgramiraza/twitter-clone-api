@@ -19,9 +19,12 @@ const uniqueEmailCheck = async (value)=>{
   return true;
 };
 
-const uniqueUsernameCheck = async (value)=>{
-  const foundEmail = await User.exists({username:value}).exec();
-  if(foundEmail)  throw new Error('Username already taken. Please choose a different one');
+const validateUsername= async (value,{req})=>{
+  // If the user is modifying their own username, skip the uniqueness check
+  if(req.user && value === req.user.username) return true;
+
+  const foundUsername= await User.exists({username:value}).exec();
+  if(foundUsername)  throw new Error('Username already taken. Please choose a different one');
   return true;
 };
 
@@ -37,7 +40,13 @@ const loginValidation = [
 
 const registerValidation = [
   body('email', 'Email Cannot be Blank').trim().isEmail().withMessage('Invalid Email').escape().custom(uniqueEmailCheck),
-  body('username', 'Username Cannot be Blank').trim().isLength({min:1}).escape().custom(uniqueUsernameCheck),
+  body('username', 'Username Cannot be Blank').trim().isLength({min:1}).escape().custom(validateUsername),
+  body('password', 'Password Cannot be Blank').trim().isLength({min:8}).escape(),
+  validationObject,
+];
+
+const modifyUserValidation = [
+  body('username', 'Username Cannot be Blank').trim().isLength({min:1}).escape().custom(validateUsername),
   body('password', 'Password Cannot be Blank').trim().isLength({min:8}).escape(),
   validationObject,
 ];
@@ -45,5 +54,6 @@ const registerValidation = [
 module.exports = {
   loginValidation,
   registerValidation,
+  modifyUserValidation, 
   authMiddleware,
 };
