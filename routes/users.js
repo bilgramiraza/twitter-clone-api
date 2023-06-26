@@ -2,14 +2,13 @@ const express = require('express');
 const router = express.Router();
 
 const userController = require('../controllers/userController');
-const { loginValidation, registerValidation} = require('../middlewares/validation');
+const { loginValidation, registerValidation, authMiddleware} = require('../middlewares/validation');
 
 /*user API Routes*/
 router.post('/', loginValidation, userController.login);
 router.post('/register', registerValidation, userController.register);
-router.post('/logout', userController.logout);
 
-router.get('/me', userController.currentUser);
+router.get('/me', authMiddleware, userController.currentUser);
 router.patch('/me', userController.modifyUser);
 router.delete('/me', userController.deleteUser);
 

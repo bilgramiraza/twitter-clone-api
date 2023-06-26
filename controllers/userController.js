@@ -35,8 +35,19 @@ const register = async (req, res) => {
   }
 };
 
-const currentUser = (req, res, next) => {
-  res.send('NOT IMPLEMENTED:');
+const currentUser = async (req, res) => {
+  try{
+    const foundUser = await User.findById(req.user).select('username email friends friendReqs').lean().exec();
+    const user = {
+      username:foundUser.username,
+      email:foundUser.email,
+      friendCount:foundUser.friends.length,
+      friendReqsCount:foundUser.friendReqs.length,
+    };
+    return res.status(200).send({user});
+  }catch(err){
+    return res.status(500).send(err);
+  }
 };
 
 const modifyUser = (req, res, next) => {
