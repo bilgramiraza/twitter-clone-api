@@ -101,8 +101,16 @@ const getFriends = async (req, res) => {
   }
 };
 
-const removeFriend = (req, res, next) => {
-  res.send('NOT IMPLEMENTED: ');
+const removeFriend = async (req, res) => {
+  try{
+    const currentUser = await User.findById(req.user.id).exec();
+    if(!currentUser)  return res.status(404).send({message:'Friend not found'});
+
+    await currentUser.removeFriend(req.params.userId);
+    return res.status(204).json({message:'Friend Removed'});
+  }catch(err){
+    return res.status(500).send(err);
+  }
 };
 
 const getFriendRequests = (req, res, next) => {

@@ -58,4 +58,9 @@ userSchema.methods.genAuthToken = function(){
   return token;
 };
 
+userSchema.methods.removeFriend = async function(userId){
+  this.friends = this.friends.filter(friendId => friendId.toString() !== userId);
+  await this.save();
+};
+
 module.exports = mongoose.model('user', userSchema);
