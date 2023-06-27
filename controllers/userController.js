@@ -129,8 +129,17 @@ const getFriendRequests = async (req, res) => {
   }
 };
 
-const sendFriendRequest = (req, res, next) => {
-  res.send('NOT IMPLEMENTED: ');
+const sendFriendRequest = async (req, res) => {
+  try{
+    const friend= await User.findById(req.params.userId).exec();
+    if(!friend)  return res.status(404).send({message:'User Not Found'});
+
+    await friend.addFriendReqs(req.user.id);
+
+    return res.status(200).json({message:'Friend Request Sent'});
+  }catch(err){
+    return res.status(500).send(err);
+  }
 };
 
 const acceptFriendRequest = (req, res, next) => {
