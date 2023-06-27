@@ -134,7 +134,7 @@ const sendFriendRequest = async (req, res) => {
     const friend= await User.findById(req.params.userId).exec();
     if(!friend)  return res.status(404).send({message:'User Not Found'});
 
-    await friend.addFriendReqs(req.user.id);
+    await friend.sendFriendRequest(req.user.id);
 
     return res.status(200).json({message:'Friend Request Sent'});
   }catch(err){
