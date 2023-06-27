@@ -85,8 +85,20 @@ const getUser = async (req, res) => {
   }
 };
 
-const getFriends = (req, res, next) => {
-  res.send('NOT IMPLEMENTED: ');
+const getFriends = async (req, res) => {
+  try{
+    const friendsList = await User
+      .findById(req.user.id)
+      .select('friends')
+      .populate('friends','_id username')
+      .lean()
+      .exec();
+    if(!friendsList)  res.status(404).send({message:'User has no friends'});
+
+    return res.status(200).json({friendsList});
+  }catch(err){
+    return res.status(500).send(err);
+  }
 };
 
 const removeFriend = (req, res, next) => {
