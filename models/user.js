@@ -59,22 +59,30 @@ userSchema.methods.genAuthToken = function(){
 };
 
 userSchema.methods.removeFriend = async function(userId){
+  if(!this.friends.includes(userId))  return;
+
   this.friends = this.friends.filter(friendId => friendId.toString() !== userId);
   await this.save();
 };
 
 userSchema.methods.sendFriendRequest = async function(userId){
+  if(this.friendReqs.includes(userId))  return;
+
   this.friendReqs = this.friendReqs.concat(userId);
   await this.save();
 };
 
 userSchema.methods.acceptFriendRequest= async function(userId){
+  if(!this.friendReqs.includes(userId) || this.friends.includes(userId))  return;
+
   this.friendReqs = this.friendReqs.filter(friendId => friendId.toString() !== userId);
   this.friends = this.friends.concat(userId);
   await this.save();
 };
 
 userSchema.methods.declineFriendRequest= async function(userId){
+  if(!this.friendReqs.includes(userId) || this.friends.includes(userId))  return;
+
   this.friendReqs = this.friendReqs.filter(friendId => friendId.toString() !== userId);
   await this.save();
 };
