@@ -64,7 +64,13 @@ userSchema.methods.removeFriend = async function(userId){
 };
 
 userSchema.methods.sendFriendRequest = async function(userId){
-  this.user.friendReqs = this.user.friendReqs.concat(userId);
+  this.friendReqs = this.friendReqs.concat(userId);
+  await this.save();
+};
+
+userSchema.methods.acceptFriendRequest= async function(userId){
+  this.friendReqs = this.friendReqs.filter(friendId => friendId.toString() !== userId);
+  this.friends = this.friends.concat(userId);
   await this.save();
 };
 
