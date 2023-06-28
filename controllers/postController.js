@@ -1,8 +1,17 @@
-const post = require('../models/post');
+const Post = require('../models/post');
 
-//Only have to implement this function once per project
-const allPosts = (req, res, next) => {
-  res.send('NOT IMPLEMENTED: All Posts');
+const allPosts = async (req, res) => {
+  try{
+    const posts = await Post
+      .find({parentPost:null})
+      .sort({createdAt:'descending'})
+      .exec();
+    if(!posts.length)  return res.status(404).send({message:'No Posts Found'});
+
+    return res.status(200).json({posts});
+  }catch(err){
+    return res.status(500).send(err);
+  }
 };
 
 const friendsPosts = (req, res, next) => {
