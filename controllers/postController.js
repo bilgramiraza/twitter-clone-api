@@ -1,4 +1,5 @@
 const Post = require('../models/post');
+const User = require('../models/user');
 
 const allPosts = async (req, res) => {
   try{
@@ -14,8 +15,25 @@ const allPosts = async (req, res) => {
   }
 };
 
-const friendsPosts = (req, res, next) => {
-  res.send('NOT IMPLEMENTED: Friends posts');
+const friendsPosts = async (req, res) => {
+  try{
+    const userFriends = await User
+      .findById(req.user.id)
+      .select('friends')
+      .exec();
+    if(!userFriends)  return res.status(404).json({message:'User has no friends'});
+    const friendPosts = await Post
+      .find().where('author').in(userFriends)
+      .select('parentPost post author likes comments')
+      .populate('author','_id username')
+      .sort({createdAt:'descending'})
+      .exec();
+    if(!friendPosts.length)  return res.status(404).json({message:"User's Friends have no posts"});
+
+    return res.status(200).json({friendPosts});
+  }catch(err){
+    return res.status(500).send(err);
+  }
 };
 
 const singlePost = (req, res, next) => {
