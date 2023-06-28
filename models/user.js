@@ -74,4 +74,9 @@ userSchema.methods.acceptFriendRequest= async function(userId){
   await this.save();
 };
 
+userSchema.methods.declineFriendRequest= async function(userId){
+  this.friendReqs = this.friendReqs.filter(friendId => friendId.toString() !== userId);
+  await this.save();
+};
+
 module.exports = mongoose.model('user', userSchema);

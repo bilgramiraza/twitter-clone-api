@@ -155,8 +155,17 @@ const acceptFriendRequest = async (req, res) => {
   }
 };
 
-const declineFriendRequest = (req, res, next) => {
-  res.send('NOT IMPLEMENTED: ');
+const declineFriendRequest = async (req, res) => {
+  try{
+    const user = await User.findById(req.user.id).exec();
+    if(!user) return res.status(404).send({message:'User Not Found'});
+
+    await user.declineFriendRequest(req.params.userId);
+
+    return res.status(200).json({message:'Friend Request Declined'});
+  }catch(err){
+    return res.status(500).send(err);
+  }
 };
 
 module.exports = {
