@@ -36,8 +36,19 @@ const friendsPosts = async (req, res) => {
   }
 };
 
-const singlePost = (req, res, next) => {
-  res.send(`NOT IMPLEMENTED: Single post ${req.params.postId}`);
+const singlePost = async (req, res) => {
+  try{
+    const post = await Post
+      .findById(req.params.postId)
+      .populate('likes','username')
+      .populate('comments')
+      .exec();
+    if(!post)  return res.status(404).json({message:"Post not Found"});
+
+    return res.status(200).json({post});
+  }catch(err){
+    return res.status(500).send(err);
+  }
 };
 
 const createPost = (req, res, next) => {
