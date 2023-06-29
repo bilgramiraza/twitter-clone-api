@@ -1,6 +1,7 @@
 const passport = require('passport');
-const { body, validationResult } = require('express-validator');
+const { body, param, validationResult } = require('express-validator');
 const User = require('../models/user');
+const Post= require('../models/post');
 
 function validationObject(req, res, next){
   //Create an ErrorHandling Object in the format of 
@@ -16,6 +17,12 @@ function validationObject(req, res, next){
 const uniqueEmailCheck = async (value)=>{
   const foundEmail = await User.exists({email:value}).exec();
   if(foundEmail)  throw new Error('Email already in use by another account');
+  return true;
+};
+
+const postExists = async (value)=>{
+  const foundPost = await Post.exists({_id:value}).exec();
+  if(!foundPost)  throw new Error('Post Not Found');
   return true;
 };
 
@@ -56,10 +63,17 @@ const postValidation = [
   validationObject,
 ];
 
+const commentValidation = [
+  param('postId','Invalid Post Id').isMongoId().custom(postExists),
+  body('post', 'Post Cannot be Blank').trim().isLength({min:1}).escape(),
+  validationObject,
+];
+
 module.exports = {
   loginValidation,
   registerValidation,
   modifyUserValidation, 
   postValidation,
+  commentValidation,
   authMiddleware,
 };
