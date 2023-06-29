@@ -63,9 +63,8 @@ const postValidation = [
   validationObject,
 ];
 
-const commentValidation = [
+const postIdValidation = [
   param('postId','Invalid Post Id').isMongoId().custom(postExists),
-  body('post', 'Post Cannot be Blank').trim().isLength({min:1}).escape(),
   validationObject,
 ];
 
@@ -74,6 +73,6 @@ module.exports = {
   registerValidation,
   modifyUserValidation, 
   postValidation,
-  commentValidation,
+  postIdValidation,
   authMiddleware,
 };
