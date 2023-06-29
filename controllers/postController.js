@@ -86,8 +86,20 @@ const createCommentPost = async (req, res) => {
   }
 };
 
-const modifyPost = (req, res, next) => {
-  res.send(`NOT IMPLEMENTED: Modifing Post ${req.params.postId}`);
+const modifyPost = async (req, res) => {
+  if(req.errorObject) 
+    return res.status(400).send({message:req.errorObject});
+
+  try{
+    const post = new Post({
+      post:req.body.post,
+    });
+    await Post.findByIdAndUpdate(req.params.postId, post, { new:true });
+
+    return res.status(201).send({message:'Post Modified Successfully'});
+  }catch(err){
+    return res.status(500).send(err);
+  }
 };
 
 const deletePost = (req, res, next) => {
