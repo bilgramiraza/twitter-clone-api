@@ -68,8 +68,22 @@ const createPost = async (req, res) => {
   }
 };
 
-const createCommentPost = (req, res, next) => {
-  res.send(`NOT IMPLEMENTED: Comment for Post ${req.params.postId}`);
+const createCommentPost = async (req, res) => {
+  if(req.errorObject) 
+    return res.status(400).send({message:req.errorObject});
+
+  try{
+    const post = new Post({
+      parentPost:req.params.postId,
+      post:req.body.post,
+      author:req.user.id,
+    });
+    await post.save();
+
+    return res.status(200).send({message:'Comment Created Successfully'});
+  }catch(err){
+    return res.status(500).send(err);
+  }
 };
 
 const modifyPost = (req, res, next) => {
