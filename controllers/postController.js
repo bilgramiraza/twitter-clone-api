@@ -102,8 +102,17 @@ const modifyPost = async (req, res) => {
   }
 };
 
-const deletePost = (req, res, next) => {
-  res.send(`NOT IMPLEMENTED: Deleting Post ${req.params.postId}`);
+const deletePost = async (req, res) => {
+  if(req.errorObject) 
+    return res.status(400).send({message:req.errorObject});
+
+  try{
+    await Post.findByIdAndDelete(req.params.id);
+    
+    return res.status(201).send({message:'Post Deleted Successfully'});
+  }catch(err){
+    return res.status(500).send(err);
+  }
 };
 
 module.exports = {
