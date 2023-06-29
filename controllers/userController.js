@@ -171,7 +171,6 @@ const declineFriendRequest = async (req, res) => {
 module.exports = {
   login,
   register,
-  logout,
   currentUser,
   modifyUser,
   deleteUser,
