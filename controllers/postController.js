@@ -51,8 +51,21 @@ const singlePost = async (req, res) => {
   }
 };
 
-const createPost = (req, res, next) => {
-  res.send('NOT IMPLEMENTED: post Create GET');
+const createPost = async (req, res) => {
+  if(req.errorObject) 
+    return res.status(400).send({message:req.errorObject});
+
+  try{
+    const post = new Post({
+      post:req.body.post,
+      author:req.user.id,
+    });
+    await post.save();
+
+    return res.status(200).send({message:'Post Created Successfully'});
+  }catch(err){
+    return res.status(500).send(err);
+  }
 };
 
 const createCommentPost = (req, res, next) => {
