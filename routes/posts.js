@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 
 const postController = require('../controllers/postController');
-const { authMiddleware } = require('../middlewares/validation');
+const { authMiddleware, postValidation } = require('../middlewares/validation');
 
 router.use(authMiddleware);
 
@@ -12,8 +12,8 @@ router.get('/friends', postController.friendsPosts);
 
 router.get('/:postId', postController.singlePost);
 
-router.post('/', postController.createPost);
-router.post('/:postId', postController.createCommentPost);
+router.post('/', postValidation, postController.createPost);
+router.post('/:postId', postValidation, postController.createCommentPost);
 
 router.patch('/:postId', postController.modifyPost);
 
