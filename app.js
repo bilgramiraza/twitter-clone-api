@@ -7,8 +7,7 @@ require('dotenv').config();
 require('./configs/mongoose-config');
 require('./configs/passport-config');
 
-const postsRouter = require('./routes/posts');
-const usersRouter = require('./routes/users');
+const apiRouter = require('./routes/api');
 
 const app = express();
 
@@ -25,7 +24,6 @@ const corsOptions = {
 };
 app.options('*', cors(corsOptions));
 
-app.use('/posts', cors(corsOptions), postsRouter);
-app.use('/users', cors(corsOptions), usersRouter);
+app.use('/api', cors(corsOptions), apiRouter);
 
 module.exports = app;
