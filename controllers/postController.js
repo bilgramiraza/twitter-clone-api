@@ -5,6 +5,7 @@ const allPosts = async (req, res) => {
   try{
     const posts = await Post
       .find({parentPost:null})
+      .populate('author','username')
       .sort({createdAt:'descending'})
       .exec();
     if(!posts.length)  return res.status(404).send({message:'No Posts Found'});
@@ -40,7 +41,7 @@ const friendsPosts = async (req, res) => {
     const friendPosts = await Post
       .find().where('author').in(userFriends)
       .select('parentPost post author likes comments')
-      .populate('author','_id username')
+      .populate('author','username')
       .sort({createdAt:'descending'})
       .exec();
     if(!friendPosts.length)  return res.status(404).json({message:"User's Friends have no posts"});
@@ -55,6 +56,7 @@ const singlePost = async (req, res) => {
   try{
     const post = await Post
       .findById(req.params.postId)
+      .populate('author','username')
       .populate('likes','username')
       .populate('comments')
       .exec();
