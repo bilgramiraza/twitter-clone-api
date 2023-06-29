@@ -51,9 +51,15 @@ const modifyUserValidation = [
   validationObject,
 ];
 
+const postValidation = [
+  body('post', 'Post Cannot be Blank').trim().isLength({min:1}).escape(),
+  validationObject,
+];
+
 module.exports = {
   loginValidation,
   registerValidation,
   modifyUserValidation, 
+  postValidation,
   authMiddleware,
 };
