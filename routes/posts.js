@@ -8,6 +8,7 @@ router.use(authMiddleware);
 
 /*Post API Routes*/
 router.get('/', postController.allPosts);
+router.get('/me', postController.currentUserPosts);
 router.get('/friends', postController.friendsPosts);
 
 router.get('/:postId', postController.singlePost);

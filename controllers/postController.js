@@ -15,6 +15,21 @@ const allPosts = async (req, res) => {
   }
 };
 
+const currentUserPosts = async (req, res) => {
+  try{
+    const userPosts = await Post
+      .find({author:req.user.id})
+      .populate('author','username')
+      .sort({createdAt:'descending'})
+      .exec();
+    if(!userPosts.length)  return res.status(404).json({message:"User has no posts"});
+
+    return res.status(200).json({userPosts});
+  }catch(err){
+    return res.status(500).send(err);
+  }
+};
+
 const friendsPosts = async (req, res) => {
   try{
     const userFriends = await User
@@ -117,6 +132,7 @@ const deletePost = async (req, res) => {
 
 module.exports = {
   allPosts,
+  currentUserPosts,
   friendsPosts,
   singlePost,
   createPost,
