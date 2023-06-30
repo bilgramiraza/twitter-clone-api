@@ -14,7 +14,7 @@ const login = async (req, res) => {
     if(!comparePasswords)
       return res.status(401).send({message:"Invalid Password"});
 
-    const token = User.genAuthToken();
+    const token = foundUser.genAuthToken();
     return res.status(200).json({message:"User Logged In",token});
 
   }catch(err){
@@ -29,7 +29,7 @@ const register = async (req, res) => {
   try{
     const user = new User(req.body);
     await user.save();
-    return res.status(201).send({message:'Registration Successful'});
+    return res.status(201).json({message:'Registration Successful'});
   }catch(err){
     return res.status(500).send(err);
   }
